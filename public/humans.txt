@@ -1,0 +1,26 @@
+/* the humans responsible & colophon */
+/* humanstxt.org */
+
+/* TEAM */
+  Lead developer: Nicolas Martignole
+  Site: http://www.touilleur-express.fr
+  Twitter: @nmartignole
+  Location: Paris, France
+
+/* THANKS */
+  Names (& URL): thanks to Guillaume Bort for Play! Framework, it changed my
+  developer' life and my vision on the dev.
+  Thanks to Salvatore Sanfilippo and Pieter Noordhuis for Redis. This is
+  just a great NoSQL solution, easy to use and that really scale.
+
+  Merci à ma famille, à mon épouse Laure et une pensée pour mon père.
+
+  Nicolas
+
+/* SITE */
+  Standards: HTML5, CSS3
+  Components: Modernizr, jQuery
+  Software: Play 2.0.3 with Scala
+
+
+

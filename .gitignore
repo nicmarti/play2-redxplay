@@ -7,3 +7,5 @@ tmp
 dist
 .idea
 .idea_modules
+app/assets/.DS_Store
+public/js/.DS_Store
