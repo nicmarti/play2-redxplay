@@ -1,16 +1,27 @@
-@(paramsForm:Form[RedisParameters])
+@(paramsForm:Form[RedisParameters])(implicit flash:Flash)
 
 @import helper.twitterBootstrap._
 
 @main("Redxplay") {
 
-<h1>Redxplay</h1>
+<article>
+    <section>
+        <div class="page-header"><h2>Where is your Redis server?</h2></div>
+        <div class="row">
+            <div class="span6">
+                @helper.form(action = routes.Application.startSession) {
+                @helper.inputText(paramsForm("hostname"))
+                @helper.inputText(paramsForm("port"))
+                @helper.inputText(paramsForm("auth"))
+                <input type="submit" value="Connect"/>
+                }
+            </div>
+            <div class="span4">
+                <h3>Configure properties</h3>
+                <p>Connection settings can be configured in conf/application.conf</p>
+            </div>
+        </div>
+    </section>
+</article>
 
-@helper.form(action = routes.Application.startSession) {
-    @helper.inputText(paramsForm("hostname"))
-    @helper.inputText(paramsForm("port"))
-    @helper.inputText(paramsForm("auth"))
-
-}
-    
 }
