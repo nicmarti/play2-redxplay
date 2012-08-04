@@ -1,7 +1,12 @@
 
+RedxPlay
+==================================================================================
 
-redxplay is a Play 2.0.3 application to monitor and to administer Redis NoSQL content
+Redxplay is a Play 2.0.3 application to monitor and to administer Redis NoSQL content
 
+Licensed under Mozilla Public License 2.0.
+See LICENSE file for more details.
 
 Nicolas Martignole
+@nmartignole
 August 2012

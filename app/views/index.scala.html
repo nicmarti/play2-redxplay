@@ -1,7 +1,16 @@
-@(message: String)
+@(paramsForm:Form[RedisParameters])
 
-@main("Welcome to Play 2.0") {
-    
-    @play20.welcome(message)
+@import helper.twitterBootstrap._
+
+@main("Redxplay") {
+
+<h1>Redxplay</h1>
+
+@helper.form(action = routes.Application.startSession) {
+    @helper.inputText(paramsForm("hostname"))
+    @helper.inputText(paramsForm("port"))
+    @helper.inputText(paramsForm("auth"))
+
+}
     
 }
