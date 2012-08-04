@@ -24,16 +24,27 @@ object Streams {
 
   // Adapter from a String that is the Redis INFO response to JsValue
   val redisInfoToJson: Enumeratee[String, JsValue] = Enumeratee.mapInput[String] {
-    case other => {
+    case other =>
       other.map {
         e =>
-          Json.toJson(
-            Map("event" -> Json.toJson("info"),
-              "content" -> Json.toJson(e)
+          try {
+            val results = e.split("\r\n")
+            val contentParsed = results.map {
+              t =>
+                val keyVal = t.split(":")
+                (keyVal(0), Json.toJson(keyVal(1)))
+            }.toMap
+
+            Json.toJson(
+              Map("event" -> Json.toJson("info"),
+                "content" -> Json.toJson(contentParsed)
+              )
             )
-          )
+          } catch {
+            case err: Exception => play.Logger.error("Streams error " + err + " with " + other); JsNull
+          }
       }
-    }
+
   }
 
   def streamInfo: Enumerator[String] = Enumerator.fromCallback {
