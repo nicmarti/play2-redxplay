@@ -54,7 +54,7 @@ object Redis {
       // close the pool
       _pool.underlying.destroy()
       _pool = null
-      play.Logger.info("Disconnected from Redis " + _pool)
+      play.Logger.info("Disconnected from Redis ")
     }
   }
 

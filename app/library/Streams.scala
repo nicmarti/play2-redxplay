@@ -22,8 +22,8 @@ object Streams {
 
   import play.api.libs.iteratee._
 
-  // Adapter from a String that is the Redis INFO response to JsValue
-  val redisInfoToJson: Enumeratee[String, JsValue] = Enumeratee.mapInput[String] {
+  // Adapter from a String that is the Redis INFO response to Map[String,String]
+  val redisInfoToMap: Enumeratee[String, Map[String, String]] = Enumeratee.mapInput[String] {
     case other =>
       other.map {
         e =>
@@ -32,27 +32,69 @@ object Streams {
             val contentParsed = results.map {
               t =>
                 val keyVal = t.split(":")
-                (keyVal(0), Json.toJson(keyVal(1)))
+                (keyVal(0), keyVal(1))
             }.toMap
-
-            Json.toJson(
-              Map("event" -> Json.toJson("info"),
-                "content" -> Json.toJson(contentParsed)
-              )
-            )
+            contentParsed
           } catch {
-            case err: Exception => play.Logger.error("Streams error " + err + " with " + other); JsNull
+            case err: Exception => play.Logger.error("Streams error " + err + " with " + other)
+            null
           }
       }
-
   }
 
-  def streamInfo: Enumerator[String] = Enumerator.fromCallback {
-    () => Promise.timeout(Redis.getInfo, 2000)
+  val mapToGeneralInfo: Enumeratee[Map[String, String], JsValue] = Enumeratee.mapInput[Map[String, String]] {
+    case someMap =>
+      someMap.map {
+        contentParsed =>
+          Json.toJson(
+            Map(
+              "event" -> Json.toJson("generalInfo"),
+              "uptime_in_days" -> contentParsed.get("uptime_in_days").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "redis_version" -> contentParsed.get("redis_version").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "uptime_in_seconds" -> contentParsed.get("uptime_in_seconds").map(s => Json.toJson(s)).getOrElse(JsNull)
+            )
+          )
+      }
+  }
+
+  val mapToMemoryCpu: Enumeratee[Map[String, String], JsValue] = Enumeratee.mapInput[Map[String, String]] {
+    case someMap =>
+      someMap.map {
+        contentParsed =>
+          Json.toJson(
+            Map(
+              "event" -> Json.toJson("memoryAndCpu"),
+              "used_cpu_sys" -> contentParsed.get("used_cpu_sys").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "used_cpu_user" -> contentParsed.get("used_cpu_user").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "used_cpu_sys_children" -> contentParsed.get("used_cpu_sys_children").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "used_cpu_user_children" -> contentParsed.get("used_cpu_user_children").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "used_memory_human" -> contentParsed.get("used_memory_human").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "used_memory_peak_human" -> contentParsed.get("used_memory_peak_human").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "mem_fragmentation_ratio" -> contentParsed.get("mem_fragmentation_ratio").map(s => Json.toJson(s)).getOrElse(JsNull)
+            )
+          )
+      }
+  }
+
+
+  def pollRedis: Enumerator[String] = Enumerator.fromCallback {
+    () => Promise.timeout(Redis.getInfo, 5000)
+  }
+
+  def pollRedisForMemoryAndCpu: Enumerator[String] = Enumerator.fromCallback {
+    () => Promise.timeout(Redis.getInfo, 1000)
+  }
+
+  def streamInfo(): Enumerator[JsValue] = {
+    pollRedis &> redisInfoToMap &> mapToGeneralInfo
+  }
+
+  def streamMemoryAndCpu(): Enumerator[JsValue] = {
+    pollRedisForMemoryAndCpu &> redisInfoToMap &> mapToMemoryCpu
   }
 
   def events(): Enumerator[JsValue] = {
-    streamInfo &> redisInfoToJson
+    streamInfo >- streamMemoryAndCpu()
   }
 }
 
