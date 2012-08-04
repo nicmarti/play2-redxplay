@@ -48,18 +48,29 @@ object Redis {
   def disconnect() = {
     if (_pool != null) {
       // Send a disconnect to the server
-      _pool.withClient{
-        client=>client.quit()
+      _pool.withClient {
+        client => client.quit()
       }
       // close the pool
       _pool.underlying.destroy()
-      _pool=null
+      _pool = null
       play.Logger.info("Disconnected from Redis " + _pool)
     }
   }
 
-  def isConnected:Boolean={
-    _pool!=null
+  def isConnected: Boolean = {
+    _pool != null
+  }
+
+  def getInfo: Option[String] = {
+    if (_pool!=null) {
+      _pool.withClient {
+        client =>
+          Option(client.info())
+      }
+    } else {
+      None
+    }
   }
 
   def pool = _pool

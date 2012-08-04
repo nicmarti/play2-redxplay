@@ -14,7 +14,10 @@ import play.api.mvc._
 import play.api.Play
 import play.api.data.validation.Constraints
 import play.api.Play.current
-import library.Redis
+import library.{Streams, Redis}
+import play.api.libs.EventSource.EventNameExtractor
+import play.api.libs.json.JsValue
+import play.api.libs.EventSource
 
 case class RedisParameters(hostname: String, port: Int, auth: Option[String])
 
@@ -61,5 +64,13 @@ object Application extends Controller {
     implicit requet =>
       Redis.disconnect()
       Redirect(routes.Application.index()).flashing("success" -> "Disconnected from Redis server")
+  }
+
+
+// Streaming using server sent event
+  def stream = Action {
+   // Define an implicit EventNameExtractor wich extract the "event" name from the Json event so that the EventSource() sets the event in the message
+    implicit val eventNameExtractor: EventNameExtractor[JsValue]=EventNameExtractor[JsValue](eventName = (myEvent)=>myEvent.\("event").asOpt[String])
+    Ok.feed(Streams.events() &> EventSource()).as("text/event-stream")
   }
 }
