@@ -14,26 +14,52 @@ import play.api.mvc._
 import play.api.Play
 import play.api.data.validation.Constraints
 import play.api.Play.current
+import library.Redis
 
-case class RedisParameters(hostname: String, port: Long, auth: Option[String])
+case class RedisParameters(hostname: String, port: Int, auth: Option[String])
 
 object Application extends Controller {
 
   val paramsForm = Form(
     mapping(
       "hostname" -> text.verifying(Constraints.nonEmpty),
-      "port" -> longNumber,
+      "port" -> number,
       "auth" -> optional(text)
-  )(RedisParameters.apply)(RedisParameters.unapply))
+    )(RedisParameters.apply)(RedisParameters.unapply))
 
   def index = Action {
-    val hostname = Play.configuration.getString("redis.hostname").getOrElse("localhost")
-    val port = Play.configuration.getInt("redis.port").getOrElse(6379)
-    val auth = Play.configuration.getString("redis.auth")
-    Ok(views.html.index(paramsForm.fill(RedisParameters(hostname, port, auth))))
+    implicit request =>
+      val hostname = Play.configuration.getString("redis.hostname").getOrElse("localhost")
+      val port = Play.configuration.getInt("redis.port").getOrElse(6379)
+      val auth = Play.configuration.getString("redis.auth")
+      Ok(views.html.index(paramsForm.fill(RedisParameters(hostname, port, auth))))
   }
 
-  def startSession = Action{
-    TODO
+  def startSession = Action {
+    implicit request =>
+      paramsForm.bindFromRequest.fold(
+        errors => BadRequest(views.html.index(errors)),
+        successForm => {
+          Redis.connectTo(successForm.hostname, successForm.port, successForm.auth).fold(
+            errorCtx => BadRequest(views.html.index(paramsForm)).flashing("error" -> errorCtx),
+            successCtx => Redirect(routes.Application.connected()).flashing("success" -> successCtx)
+          )
+        }
+      )
+  }
+
+  def connected = Action {
+    implicit request =>
+      if (!Redis.isConnected) {
+        Redirect(routes.Application.index()).flashing("error"->"You are not connected")
+      }else{
+        Ok(views.html.connected())
+      }
+  }
+
+  def disconnect() = Action {
+    implicit requet =>
+      Redis.disconnect()
+      Redirect(routes.Application.index()).flashing("success" -> "Disconnected from Redis server")
   }
 }

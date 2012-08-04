@@ -1,0 +1,3 @@
+hostname=Redis hostname
+port=Redis TCP Port
+auth=Redis AUTH
