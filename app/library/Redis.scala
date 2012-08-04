@@ -51,6 +51,9 @@ object Redis {
       _pool.withClient{
         client=>client.quit()
       }
+      // close the pool
+      _pool.underlying.destroy()
+      _pool=null
       play.Logger.info("Disconnected from Redis " + _pool)
     }
   }
