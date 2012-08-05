@@ -45,7 +45,7 @@ object Application extends Controller {
         successForm => {
           Redis.connectTo(successForm.hostname, successForm.port, successForm.auth).fold(
             errorCtx => BadRequest(views.html.index(paramsForm)).flashing("error" -> errorCtx),
-            successCtx => Redirect(routes.Application.heatmap()).flashing("success" -> successCtx)
+            successCtx => Redirect(routes.Application.connected()).flashing("success" -> successCtx)
           )
         }
       )
