@@ -27,7 +27,7 @@ object Redis {
     // First disconnect, if we were connected
     disconnect()
     // then recreate a new JedisPool
-    val pool = new Pool(new JedisPool(new JedisPoolConfig(), hostname, port, 30000, auth.getOrElse(null)))
+    val pool = new Pool(new JedisPool(new JedisPoolConfig(), hostname, port, 60000, auth.getOrElse(null)))
     try {
       pool.withClient {
         client =>
@@ -35,7 +35,7 @@ object Redis {
       }
       _pool = pool
     } catch {
-      case ctx: JedisConnectionException => "Unable to connect to " + hostname + ":" + port
+      case e: Exception => "Unable to connect to " + hostname + ":" + port +" due to "+e.getMessage
     }
 
     val toReturn: Either[String, String] = _pool match {

@@ -8,7 +8,7 @@
     <section>
         <div class="page-header"><h2>Where is your Redis server?</h2></div>
         <div class="row">
-            <div class="span6">
+            <div class="span3">
                 @helper.form(action = routes.Application.startSession) {
                 @helper.inputText(paramsForm("hostname"))
                 @helper.inputText(paramsForm("port"))
@@ -16,14 +16,20 @@
                 <button class="btn btn-primary">Connect to Redis</button>
                 }
             </div>
-            <div class="span5">
-                <h3>Configure properties</h3>
-                <p>Connection settings can be configured in conf/application.conf</p>
+            <div class="span9">
+                <h3>Try with Heroku/RedisToGo?</h3>
+                <p>Create an instance on <a href="https://redistogo.com">Redistogo</a>, this takes 2 mn and gives
+                    you a redis URL like : <code>redis://redistogo:d01bc6e77a93114697571aeb9a81744f@@tetra.redistogo.com:9907/</code>.
+                </p>
+                <ul>
+                    <li>Enter <font color="red">tetra.redistogo.com</font> as the hostname</li>
+                    <li>Enter <font color="#bb0022">9907</font> as the TCP port</li>
+                    <li>Set <font color="#bbb022">d01bc6e77a93114697571aeb9a81744f</font> as the AUTH</li>
+                </ul>
                 <h3>Don't have Redis installed?</h3>
-                <p>You can install and launch a local redis server in 2 minuts.</p>
-                <p>- <a href="http://redis.io/download">Download Redis </a>, unzip, start the server with "redis-server"</p>
-                <p>- or install Redis with Homebrew, type "brew install redis" on Mac</p>
-                <p>- or install Redis with "apt-get install redis" on Linux</p>
+                <p><a href="https://redistogo.com/documentation/introduction_to_redis">Read this quick start guide</a> if you want to install Redis from the source.</p>
+                <p>You can also install Redis with Homebrew, type <code>brew install redis</code> on Mac</p>
+                <p>For Linix, install Redis with <code>apt-get install redis</code>.</p>
             </div>
         </div>
     </section>
