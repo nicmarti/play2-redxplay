@@ -8,94 +8,54 @@
     <section>
         <div class="row">
             <div class="span12">
-
-                <script type="text/javascript" charset="utf-8">
-                    var feed;
-
-                    if (!!window.EventSource) {
-                        feed = new EventSource('/stream');
-                        $("#status").html("Connected");
-                        $("#disconnect").removeAttr("disabled");
-
-                        feed.addEventListener('generalInfo', function (e) {
-                            $("#status").html("Received general info data");
-                            var dataParsed = JSON.parse(e.data);
-
-                            $("#redis_version").html(dataParsed.redis_version)
-                            $("#uptime_in_seconds").html(dataParsed.uptime_in_seconds)
-                            $("#uptime_in_days").html(dataParsed.uptime_in_days)
-                        }, false);
-
-                        feed.addEventListener('memoryAndCpu', function (e) {
-                            $("#status").html("Received cpu and memory data");
-                            var dataParsed = JSON.parse(e.data);
-                            $("#used_cpu_sys").html(dataParsed.used_cpu_sys);
-                            $("#used_cpu_user").html(dataParsed.used_cpu_user);
-                            $("#used_cpu_sys_children").html(dataParsed.used_cpu_sys_children);
-                            $("#used_cpu_user_children").html(dataParsed.used_cpu_user_children);
-                            $("#used_memory").html(dataParsed.used_memory);
-                            $("#used_memory_human").html(dataParsed.used_memory_human);
-                            $("#used_memory_rss").html(dataParsed.used_memory_rss);
-                            $("#used_memory_peak").html(dataParsed.used_memory_peak);
-                            $("#used_memory_peak_human").html(dataParsed.used_memory_peak_human);
-                            $("#mem_fragmentation_ratio").html(dataParsed.mem_fragmentation_ratio);
-                        }, false);
-
-
-                        feed.addEventListener('error', function (e) {
-                            if (e.readyState == EventSource.CLOSED) {
-                                // Connection was closed.
-                                $("#status").html("Error")
-                            }
-                        }, false);
-
-                    }
-                    else {
-                        $("#status").html("Server side event not supported by this browser");
-                    }
-                    $(document).ready(function () {
-                        $("#disconnect").click(function (e) {
-                            e.preventDefault();
-                            feed.close();
-                            $("#status").html("Disconnected");
-                            $("#disconnect").attr("disabled", "disabled");
-                        });
-                    });
-                </script>
-
                 <div id="status" class="alert alert-info">Status</div>
                 <hr/>
-                </div>
+            </div>
 
 
-                <div class="span3 alert alert-block">
-                    <h4>Information</h4>
+            <div class="span3 alert alert-block">
+                <h4>Information</h4>
 
-                    <p>Redis version: <span id="redis_version"></span></p>
+                <p>Redis version: <span id="redis_version"></span></p>
 
-                    <p>Uptime: <span id="uptime_in_seconds"></span> seconds</p>
+                <p>Uptime: <span id="uptime_in_seconds"></span> seconds</p>
 
-                    <p>Uptime in days: <span id="uptime_in_days"></span></p>
-                </div>
+                <p>Uptime in days: <span id="uptime_in_days"></span></p>
+            </div>
 
 
-                <div class="span3 statusBox">
-                    <h4>CPU</h4>
+            <div class="span3 statusBox">
+                <h4>CPU</h4>
 
-                    <p>Used CPU sys: <span id="used_cpu_sys"></span></p>
-                    <p>Used CPU user: <span id="used_cpu_user"></span></p>
-                    <p>Used CPU sys children: <span id="used_cpu_sys_children"></span></p>
-                    <p>Used CPU user children: <span id="used_cpu_user_children"></span></p>
-                </div>
-                <div class="span3 statusBox">
-                    <h4>Memory</h4>
-                    <p>Used memory human: <span id="used_memory_human"></span></p>
-                    <p>Used memory peak human: <span id="used_memory_peak_human"></span></p>
-                    <p>Fragmentation ratio: <span id="mem_fragmentation_ratio"></span></p>
-                </div>
+                <p>Used CPU sys: <span id="used_cpu_sys"></span></p>
+
+                <p>Used CPU user: <span id="used_cpu_user"></span></p>
+
+                <p>Used CPU sys children: <span id="used_cpu_sys_children"></span></p>
+
+                <p>Used CPU user children: <span id="used_cpu_user_children"></span></p>
+            </div>
+            <div class="span3 statusBox">
+                <h4>Memory</h4>
+
+                <p>Used memory human: <span id="used_memory_human"></span></p>
+
+                <p>Used memory peak human: <span id="used_memory_peak_human"></span></p>
+
+                <p>Fragmentation ratio: <span id="mem_fragmentation_ratio"></span></p>
+            </div>
+
+            <div id="graphred" class="span6">
+
+            </div>
+
+
+            <div id="graphmem" class="span6">
+
+            </div>
 
             <div class="span12">
-            <hr/>
+                <hr/>
                 <button id="disconnect" class="btn btn-primary">Close the stream</button>
             </div>
 
@@ -108,4 +68,12 @@
     </section>
 </article>
 
+<!-- Highchart -->
+<script src="http://code.highcharts.com/highcharts.js" type="text/javascript"></script>
+<script src='@routes.Assets.at("js/script.js")' type="text/javascript"></script>
+
+<!-- Additional files for the Highslide popup effect -->
+<script type="text/javascript" src="http://www.highcharts.com/highslide/highslide-full.min.js"></script>
+<script type="text/javascript" src="http://www.highcharts.com/highslide/highslide.config.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="http://www.highcharts.com/highslide/highslide.css"/>
 }

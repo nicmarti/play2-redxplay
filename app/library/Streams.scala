@@ -69,6 +69,9 @@ object Streams {
               "used_cpu_sys_children" -> contentParsed.get("used_cpu_sys_children").map(s => Json.toJson(s)).getOrElse(JsNull),
               "used_cpu_user_children" -> contentParsed.get("used_cpu_user_children").map(s => Json.toJson(s)).getOrElse(JsNull),
               "used_memory_human" -> contentParsed.get("used_memory_human").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "used_memory" -> contentParsed.get("used_memory").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "used_memory_peak" -> contentParsed.get("used_memory_peak").map(s => Json.toJson(s)).getOrElse(JsNull),
+              "used_memory_peak_human" -> contentParsed.get("used_memory_peak_human").map(s => Json.toJson(s)).getOrElse(JsNull),
               "used_memory_peak_human" -> contentParsed.get("used_memory_peak_human").map(s => Json.toJson(s)).getOrElse(JsNull),
               "mem_fragmentation_ratio" -> contentParsed.get("mem_fragmentation_ratio").map(s => Json.toJson(s)).getOrElse(JsNull)
             )
