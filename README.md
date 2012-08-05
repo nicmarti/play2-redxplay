@@ -25,10 +25,10 @@ The binaries that are now compiled are available in the src directory. Run Redis
 You can interact with Redis using the built-in client:
 
     $ src/redis-cli
-    redis> set jsf c_de_la_merde
+    redis> set myname batman
     OK
-    redis> get jsf
-    "c_de_la_merde"
+    redis> get myname
+    "batman"
 
 ## Install Play2 Framework
 
