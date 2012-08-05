@@ -19,9 +19,16 @@ $(function () {
                 text:'Live streamed as Server sent event'
             },
             xAxis:{
-                type:'time',
-                min:0,
-                max:60
+                type:'datetime',
+                dateTimeLabelFormats:{
+                    second:'%S',
+                    minute:'%H:%M',
+                    hour:'%H:%M',
+                    day:'%e. %b',
+                    week:'%e. %b',
+                    month:'%b \'%y',
+                    year:'%Y'
+                }
             },
             yAxis:{
                 title:{
@@ -40,24 +47,9 @@ $(function () {
             plotOptions:{
                 series:{
                     cursor:'pointer',
-                    point:{
-                        events:{
-                            click:function () {
-                                hs.htmlExpand(null, {
-                                    pageOrigin:{
-                                        x:this.pageX,
-                                        y:this.pageY
-                                    },
-                                    headingText:this.series.name,
-                                    maincontentText:Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
-                                        this.y + ' visits',
-                                    width:200
-                                });
-                            }
-                        }
-                    },
                     marker:{
-                        lineWidth:1
+                        lineWidth:1,
+                        enabled:false
                     }
                 }
             },
@@ -85,8 +77,7 @@ $(function () {
                 text:'Live streamed as Server sent event'
             },
             xAxis:{
-                type:'time',
-                min:0
+                type:'datetime'
             },
             yAxis:{
                 title:{
@@ -101,27 +92,13 @@ $(function () {
                 shared:true,
                 crosshairs:true
             },
+
             plotOptions:{
                 series:{
                     cursor:'pointer',
-                    point:{
-                        events:{
-                            click:function () {
-                                hs.htmlExpand(null, {
-                                    pageOrigin:{
-                                        x:this.pageX,
-                                        y:this.pageY
-                                    },
-                                    headingText:this.series.name,
-                                    maincontentText:Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
-                                        this.y + ' visits',
-                                    width:200
-                                });
-                            }
-                        }
-                    },
                     marker:{
-                        lineWidth:1
+                        lineWidth:1,
+                        enabled:false
                     }
                 }
             },

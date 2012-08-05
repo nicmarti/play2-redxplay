@@ -10,6 +10,7 @@
             <div class="span12">
                 <div id="status" class="alert alert-info">Status</div>
                 <hr/>
+                Tip: you can simulate a heavy load with "redis-benchmark -q -n 100000"
             </div>
 
 
@@ -23,7 +24,6 @@
                 <p>Uptime in days: <span id="uptime_in_days"></span></p>
             </div>
 
-
             <div class="span3 statusBox">
                 <h4>CPU</h4>
 
@@ -35,6 +35,8 @@
 
                 <p>Used CPU user children: <span id="used_cpu_user_children"></span></p>
             </div>
+
+
             <div class="span3 statusBox">
                 <h4>Memory</h4>
 
@@ -45,14 +47,14 @@
                 <p>Fragmentation ratio: <span id="mem_fragmentation_ratio"></span></p>
             </div>
 
+            <div class="clearfix"></div>
+
             <div id="graphred" class="span6">
-
             </div>
-
 
             <div id="graphmem" class="span6">
-
             </div>
+
 
             <div class="span12">
                 <hr/>
