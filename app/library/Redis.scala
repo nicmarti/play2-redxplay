@@ -19,9 +19,14 @@ import redis.clients.jedis.exceptions.JedisConnectionException
  * Created: 04/08/2012 17:13
  */
 
+case class RedisSession(hostname: String, port: Int, auth: Option[String])
+
 object Redis {
 
   private[this] var _pool: Pool = null
+  private[this] var _hostname: Option[String] = None
+  private[this] var _auth: Option[String] = None
+  private[this] var _port: Option[Int] = None
 
   def connectTo(hostname: String, port: Int, auth: Option[String]): Either[String, String] = {
     // First disconnect, if we were connected
@@ -32,10 +37,12 @@ object Redis {
       pool.withClient {
         client =>
           client.ping()
+          this._hostname = Option(hostname)
+          this._port = Option(port)
       }
       _pool = pool
     } catch {
-      case e: Exception => "Unable to connect to " + hostname + ":" + port +" due to "+e.getMessage
+      case e: Exception => "Unable to connect to " + hostname + ":" + port + " due to " + e.getMessage
     }
 
     val toReturn: Either[String, String] = _pool match {
@@ -54,6 +61,8 @@ object Redis {
       // close the pool
       _pool.underlying.destroy()
       _pool = null
+      _hostname = None
+      _port = None
       play.Logger.info("Disconnected from Redis ")
     }
   }
@@ -63,7 +72,7 @@ object Redis {
   }
 
   def getInfo: Option[String] = {
-    if (_pool!=null) {
+    if (_pool != null) {
       _pool.withClient {
         client =>
           Option(client.info())
@@ -75,4 +84,11 @@ object Redis {
 
   def pool = _pool
 
+  def currentRedisSession: Option[RedisSession] = {
+    val res = for (hostname <- _hostname.toRight("No hostmame").right;
+                   port <- _port.toRight("No port").right) yield RedisSession(hostname, port, _auth)
+    res.fold(error => {
+      play.Logger.error(error); None
+    }, validSession => Some(validSession))
+  }
 }

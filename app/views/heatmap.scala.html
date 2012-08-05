@@ -1,0 +1,16 @@
+@(currentRedisSession:Option[library.RedisSession])(implicit flash:Flash)
+
+@import helper.twitterBootstrap._
+
+@main("Redxplay") {
+
+<article>
+    <section>
+        <div class="row">
+            <div class="span12">
+                @currentRedisSession<br/>
+            </div>
+       </div>
+    </section>
+</article>
+}
