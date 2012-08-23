@@ -49,6 +49,9 @@ If your redis-server is up and running, you should be able to connect on your lo
 
 Once connected, check the realtime updates sent by the server to the browser. Play2 implements Server sent event, with advanced Enumeratee/Iterator no-blocking I/O.
 
+## See an online version on Heroku
+
+A version of this application is deployed Heroku: http://play2-redxplay.herokuapp.com/
 
 
 
